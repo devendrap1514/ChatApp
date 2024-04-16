@@ -1,18 +1,23 @@
 class MessagesController < ApplicationController
   include Pagy::Backend
 
-  before_action :find_user, only: %i[index]
+  before_action :find_chat_person, only: %i[index]
   before_action :find_receiver, only: %i[create]
 
   def index
-    messages = current_user.send_messages.where(receiver_id: @user.id)
-    render json: MessageSerializer.new(messages)
+    # me => receiver
+    # receiver => me
+    # all messages that we send each other
+    messages = Message.none
+    messages = messages.or(current_user.send_messages.where(receiver_id: @chat_person.id))
+    messages = messages.or(current_user.received_messages.where(sender_id: @chat_person.id))
+    render json: MessageSerializer.new(messages.order(:created_at))
   end
 
   def create
     message = Message.new(create_params)
     if message.save
-      UserChannel.broadcast_to(current_user, MessageSerializer.new(message))
+      UserChannel.broadcast_to(@receiver, MessageSerializer.new(message))
       render json: MessageSerializer.new(message)
     else
       render json: { errors: message.errors.full_messages }
@@ -25,13 +30,13 @@ class MessagesController < ApplicationController
   end
 
   def find_receiver
-    @sender = User.find(params[:receiver_id])
+    @receiver = User.find(params[:receiver_id])
   rescue ActiveRecord::RecordNotFound
     render json: { error: 'User not found' }
   end
 
-  def find_user
-    @user = User.find(params[:id])
+  def find_chat_person
+    @chat_person = User.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     render json: { error: 'User not found' }
   end

@@ -4,6 +4,8 @@ class Message < ApplicationRecord
 
   before_validation :check_self_message
 
+  # default_scope { order(:created_at) }
+
   private
 
   def check_self_message
