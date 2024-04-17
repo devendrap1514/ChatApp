@@ -11,5 +11,4 @@ Rails.application.routes.draw do
   resources :messages, only: %i[index create]
   resources :chat_users, only: %i[index]
 
-  post '/webhooks/calendly', to: 'webhooks#calendly'
 end
