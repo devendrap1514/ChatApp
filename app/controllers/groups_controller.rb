@@ -1,6 +1,4 @@
 class GroupsController < ApplicationController
-  before_action :authorize_request, only: %i[index create]
-
   def index
     @groups = @current_user.groups
   end

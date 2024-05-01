@@ -1,6 +1,4 @@
 class MessagesController < ApplicationController
-  include Pagy::Backend
-
   before_action :find_receiver, only: %i[index create]
 
   def index

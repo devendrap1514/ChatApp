@@ -1,5 +1,4 @@
 class ChatUsersController < ApplicationController
-
   def index
     @chat_users = []
     current_user.send_messages.where(receivable_type: "User").select(:receivable_id, :receivable_type).group(:receivable_id, :receivable_type).each do |message|
