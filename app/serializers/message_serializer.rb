@@ -7,7 +7,6 @@ class MessageSerializer < ApplicationSerializer
   end
 
   attribute :receiver do |object|
-    UserSerializer.new(object.receiver)
-    object.receiver.email
+    object.receivable
   end
 end

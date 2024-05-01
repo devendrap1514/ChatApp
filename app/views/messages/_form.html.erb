@@ -1,0 +1,6 @@
+<%= form_with url: messages_path, remote: true do |f| %>
+  <%= f.hidden_field :receivable_type, value: params[:receivable_type] %>
+  <%= f.hidden_field :receivable_id, value: params[:receivable_id] %>
+  <%= f.text_field :content, hint: "Type here" %>
+  <%= f.submit "Send" %>
+<% end %>

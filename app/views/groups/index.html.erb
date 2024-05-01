@@ -1,0 +1,3 @@
+<% @groups.each do |group| %>
+  <%= link_to "#{group.name}", "#{messages_path}?receivable_type=#{group.class.name}&receivable_id=#{group.id}" %></div>
+<% end %>

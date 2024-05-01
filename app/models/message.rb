@@ -1,15 +1,15 @@
 class Message < ApplicationRecord
   belongs_to :sender, class_name: 'User', foreign_key: 'sender_id'
-  belongs_to :receiver, class_name: 'User', foreign_key: 'receiver_id'
+  belongs_to :receivable, polymorphic: true
 
-  before_validation :check_self_message
+  before_validation :check_self_message, if: -> { receivable.class.name == "User" }
 
-  # default_scope { order(:created_at) }
+  validates :content, presence: true
 
   private
 
   def check_self_message
-    if sender.id == receiver.id
+    if sender.id == receivable.id
       errors.add(:base, "can't send message to self")
     end
   end

@@ -1,23 +1,22 @@
 class MessagesController < ApplicationController
   include Pagy::Backend
 
-  before_action :find_chat_person, only: %i[index]
-  before_action :find_receiver, only: %i[create]
+  before_action :find_receiver, only: %i[index create]
 
   def index
-    # me => receiver
-    # receiver => me
-    # all messages that we send each other
-    messages = Message.none
-    messages = messages.or(current_user.send_messages.where(receiver_id: @chat_person.id))
-    messages = messages.or(current_user.received_messages.where(sender_id: @chat_person.id))
-    render json: MessageSerializer.new(messages.order(:created_at))
+    if @receiver.class.name == "User"
+      @messages = Message.none
+      @messages = @messages.or(current_user.send_messages.where(receivable_type: @receiver.class.name, receivable_id: @receiver.id))
+      @messages = @messages.or(current_user.received_messages.where(sender_id: @receiver.id))
+    elsif @receiver.class.name == "Group"
+      @messages = @receiver.messages
+    end
   end
 
   def create
     message = Message.new(create_params)
     if message.save
-      UserChannel.broadcast_to(@receiver, MessageSerializer.new(message))
+      # UserChannel.broadcast_to(@receiver, MessageSerializer.new(message))
       render json: MessageSerializer.new(message)
     else
       render json: { errors: message.errors.full_messages }
@@ -26,18 +25,31 @@ class MessagesController < ApplicationController
 
   private
   def create_params
-    params.permit(:sender_id, :receiver_id, :content).merge(sender_id: current_user.id)
+    params.permit(:sender_id, :receivable_type, :receivable_id, :content).merge(sender_id: current_user.id)
   end
 
   def find_receiver
-    @receiver = User.find(params[:receiver_id])
+    is_params_present, output = is_params_present?([:receivable_type, :receivable_id])
+    unless is_params_present
+      return respond_to do |format|
+        format.json {
+          render json: { errors: op }, status: :bad_request
+        }
+        format.html {
+          flash.alert = op
+          redirect_to :root_path
+        }
+      end
+    end
+    class_name = params[:receivable_type]
+    class_name.constantize  # not check model in below line
+    unless class_name.present? && ActiveRecord::Base.descendants.map(&:name).include?(class_name)
+      raise NameError
+    end
+    @receiver = class_name.constantize.find(params[:receivable_id])
+  rescue NameError
+    render json: { errors: ['No such receiver type present'] }
   rescue ActiveRecord::RecordNotFound
-    render json: { error: 'User not found' }
-  end
-
-  def find_chat_person
-    @chat_person = User.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    render json: { error: 'User not found' }
+    render json: { errors: ['Receiver not found'] }
   end
 end

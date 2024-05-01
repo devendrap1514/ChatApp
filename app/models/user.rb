@@ -2,7 +2,11 @@ class User < ApplicationRecord
   has_secure_password
 
   has_many :send_messages, class_name: "Message", foreign_key: "sender_id", dependent: :destroy
-  has_many :received_messages, class_name: "Message",  foreign_key: "receiver_id", dependent: :destroy
+  has_many :received_messages, class_name: "Message", as: :receivable, dependent: :destroy
+
+  has_many :created_groups, class_name: 'Group', foreign_key: 'creator_id', dependent: :destroy
+  has_many :user_groups, class_name: 'UserGroup', foreign_key: 'user_id', dependent: :destroy
+  has_many :groups, through: :user_groups
 
   before_validation lambda {
     self.email.strip!
