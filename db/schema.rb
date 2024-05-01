@@ -39,6 +39,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_30_122419) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["group_id"], name: "index_user_groups_on_group_id"
+    t.index ["user_id", "group_id"], name: "index_user_groups_on_user_id_and_group_id", unique: true
     t.index ["user_id"], name: "index_user_groups_on_user_id"
   end
 
