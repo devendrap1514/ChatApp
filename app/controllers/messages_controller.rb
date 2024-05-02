@@ -42,10 +42,10 @@ class MessagesController < ApplicationController
     class_name = params[:receivable_type]
     class_name.constantize  # not check model in below line
     unless class_name.present? && ActiveRecord::Base.descendants.map(&:name).include?(class_name)
-      raise NameError
+      raise TypeError
     end
     @receiver = class_name.constantize.find(params[:receivable_id])
-  rescue NameError
+  rescue TypeError
     render json: { errors: ['No such receiver type present'] }
   rescue ActiveRecord::RecordNotFound
     render json: { errors: ['Receiver not found'] }
