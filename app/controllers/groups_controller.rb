@@ -1,6 +1,12 @@
 class GroupsController < ApplicationController
+  include UserAndGroup
+
   def index
-    @groups = @current_user.groups
+    @groups = get_groups
+    respond_to do |format|
+      format.json { render json: GroupSerializer.new(@groups)}
+      format.html {}
+    end
   end
 
   def create

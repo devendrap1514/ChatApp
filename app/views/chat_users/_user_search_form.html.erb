@@ -1,0 +1,3 @@
+<%= form_with url: search_chat_users_path, remote: true, method: :get, data: { turbo_frame: 'user_search_result', controller: "user-search" } do |f| %>
+  <%= f.text_field :query, hint: "Type to search...", data: { action: "input->user-search#search" } %>
+<% end %>

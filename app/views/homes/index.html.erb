@@ -45,6 +45,7 @@
           <% end %>
         </ul>
       </nav>
+      <%= button_to "Search", search_chat_users_path, method: :get, data: { turbo_frame: :user_search_page }%>
       Groups
       <nav>
         <ul>
@@ -53,6 +54,11 @@
           <% end %>
         </ul>
       </nav>
+
+      <div>
+        <%= turbo_frame_tag "user_search_page" do %>
+        <% end %>
+      </div>
     </div>
     <div class="chat-screen">
       <%= turbo_frame_tag "chat_page" do %>

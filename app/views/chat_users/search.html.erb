@@ -1,0 +1,15 @@
+<%= turbo_frame_tag "user_search_page" do %>
+  <%= render partial: 'chat_users/user_search_form' %>
+  <%= turbo_frame_tag 'user_search_result' do %>
+    <% if @users.nil? %>
+    <% elsif @users.empty? %>
+      <div> Not find </div>
+    <% else %>
+      <% @users.each do |user| %>
+        <div>
+          <%= link_to "#{user.email}", "#{messages_path}?receivable_type=#{user.class.name}&receivable_id=#{user.id}", data: { turbo_frame: :chat_page } %>
+        </div>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
