@@ -3,14 +3,11 @@ class GroupsController < ApplicationController
 
   def index
     @groups = get_groups
-    respond_to do |format|
-      format.json { render json: GroupSerializer.new(@groups)}
-      format.html {}
-    end
+    render json: GroupSerializer.new(@groups)
   end
 
   def create
-    group = Group.new(group_create_params)
+    group = @current_user.created_groups.new(group_create_params)
     if group.save
       render json: GroupSerializer.new(group)
     else

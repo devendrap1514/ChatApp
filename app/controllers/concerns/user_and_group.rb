@@ -21,6 +21,6 @@ module UserAndGroup
   end
 
   def get_groups
-    groups = current_user.groups
+    current_user.groups
   end
 end

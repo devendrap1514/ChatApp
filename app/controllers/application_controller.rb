@@ -9,10 +9,7 @@ class ApplicationController < ActionController::Base
     id = decode_hash[:id]
     @current_user = User.find(id)
   rescue ActiveRecord::RecordNotFound
-    respond_to do |format|
-      format.json { render json: { error: "User not found" }, status: :not_found }
-      format.html { redirect_to login_form_session_path }
-    end
+    format.json { render json: { error: "User not found" }, status: :not_found }
   rescue JWT::DecodeError => e
     respond_to do |format|
       format.json { render json: { error: e.message }, status: :unauthorized }
@@ -33,5 +30,9 @@ class ApplicationController < ActionController::Base
     end
     return [false, errors] unless errors.empty?
     return [true, errors]
+  end
+
+  def layout
+
   end
 end

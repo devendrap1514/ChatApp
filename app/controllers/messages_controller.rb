@@ -8,16 +8,19 @@ class MessagesController < ApplicationController
       @messages = @messages.or(current_user.received_messages.where(sender_id: @receiver.id))
     elsif @receiver.class.name == "Group"
       @messages = @receiver.messages
+    else
+      raise
     end
+    render json: MessageSerializer.new(@messages)
   end
 
   def create
-    message = Message.new(create_params)
-    if message.save
-      # UserChannel.broadcast_to(@receiver, MessageSerializer.new(message))
-      render json: MessageSerializer.new(message)
+    @message = Message.new(create_params)
+    if @message.save
+      UserChannel.broadcast_to(@receiver, MessageSerializer.new(@message))
+      render json: MessageSerializer.new(@message)
     else
-      render json: { errors: message.errors.full_messages }
+      render json: { errors: @message.errors.full_messages }
     end
   end
 
@@ -29,15 +32,7 @@ class MessagesController < ApplicationController
   def find_receiver
     is_params_present, output = is_params_present?([:receivable_type, :receivable_id])
     unless is_params_present
-      return respond_to do |format|
-        format.json {
-          render json: { errors: op }, status: :bad_request
-        }
-        format.html {
-          flash.alert = op
-          redirect_to :root_path
-        }
-      end
+      return render json: { errors: output }, status: :bad_request
     end
     class_name = params[:receivable_type]
     class_name.constantize  # not check model in below line

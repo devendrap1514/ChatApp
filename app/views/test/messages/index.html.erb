@@ -23,50 +23,45 @@
       margin-bottom: 10px;
       background-color: #bdb6a4 ;
       padding: 10px;
+      margin-left: auto;
     }
     .sender-name {
-
     }
     .sender-msg {
-
     }
 
     .wrapper {
       display: flex;
       flex-direction: column;
       height: 86vh;
+      overflow-y: auto;
     }
 
-    .top, .bottom {
+    .top {
       flex: 0 0 auto;
     }
 
     .middle {
       flex: 1;
-      overflow-y: auto;
       padding: 10px;
+    }
+
+    .bottom {
+      flex: 0 0 auto;
     }
   </style>
 
   <div class="wrapper">
     <div class="receiver-tag top"> <%= @receiver.name %> </div>
-    <div class="middle">
-      <% @messages.each do |msg| %>
-        <% if msg.sender == @current_user %>
-          <div class="self-message-box">
-            <div class="sender-name"> <%= msg.sender.name %> </div>
-            <div class="sender-msg"> <%= msg.content %> </div>
-          </div>
-        <% else %>
-          <div class="message-box">
-            <div class="sender-name"> <%= msg.sender.name %> </div>
-            <div class="sender-msg"> <%= msg.content %> </div>
-          </div>
+    <%# <div id="<%@receiver%>"> %>
+      <div class="middle">
+        <% @messages.each do |msg| %>
+          <%= render partial: 'message', locals: { @message: msg } %>
         <% end %>
-      <% end %>
-    </div>
+      </div>
+    <%# </div> %>
     <div class="bottom">
-      <%= render partial: 'messages/form' %>
+      <%= render partial: 'form' %>
     </div>
   </div>
 <% end %>

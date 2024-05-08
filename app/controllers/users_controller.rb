@@ -1,9 +1,6 @@
 class UsersController < ApplicationController
   before_action :authorize_request, only: %i[destroy]
 
-  def new
-  end
-
   def create
     user = User.new(create_params)
     if user.save

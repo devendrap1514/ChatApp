@@ -1,17 +1,17 @@
 class GroupMembersController < ApplicationController
-  before_action :find_group, only: %i[create]
+  before_action :find_group, only: %i[index create]
+
+  def index
+    @members = @group.users
+    render json: UserSerializer.new(@members)
+  end
+
   def create
     unless User.find_by(id: params[:member_id])
-      return respond_to do |format|
-        format.json { render json: { errors: ['User not found'] }, status: :not_found }
-        format.html {  }
-      end
+      return render json: { errors: ['User not found'] }, status: :not_found
     end
     @group.user_groups.create(user_id: params[:member_id])
-    respond_to do |format|
-        format.json { render json: { errors: ['Successfully added'] }, status: :ok }
-        format.html {  }
-      end
+    render json: { errors: ['Successfully added'] }, status: :ok
   end
 
   private
@@ -19,9 +19,6 @@ class GroupMembersController < ApplicationController
   def find_group
     @group = @current_user.groups.find(params[:group_id])
   rescue ActiveRecord::RecordNotFound
-    respond_to do |format|
-      format.json { render json: { errors: ['Group not found'] }, status: :not_found }
-      format.html {  }
-    end
+    render json: { errors: ['Group not found'] }, status: :not_found
   end
 end
