@@ -8,6 +8,8 @@ class Message < ApplicationRecord
 
   before_save :check_group_member, if: -> { receivable.class.name == "Group" }
 
+  # scope :default_scope, -> {  }
+
   private
 
   def check_self_message

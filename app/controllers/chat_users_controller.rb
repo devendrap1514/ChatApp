@@ -1,9 +1,9 @@
 class ChatUsersController < ApplicationController
-  include UserAndGroup
+  include UserConcern
 
   def index
     @chat_users = get_chat_users
-    render json: UserSerializer.new(@chat_users)
+    render json: ChatUserSerializer.new(@chat_users)
   end
 
   def search

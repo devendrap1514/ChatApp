@@ -1,5 +1,5 @@
 class GroupsController < ApplicationController
-  include UserAndGroup
+  include GroupConcern
 
   def index
     @groups = get_groups
@@ -11,7 +11,7 @@ class GroupsController < ApplicationController
     if group.save
       render json: GroupSerializer.new(group)
     else
-      render json: { errors: group.errors.full_messages }
+      render json: { errors: group.errors.full_messages }, status: :unprocessable_entity
     end
   end
 

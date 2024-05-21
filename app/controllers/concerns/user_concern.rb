@@ -1,4 +1,4 @@
-module UserAndGroup
+module UserConcern
   extend ActiveSupport::Concern
 
   def get_chat_users
@@ -18,9 +18,5 @@ module UserAndGroup
     end
 
     chat_users
-  end
-
-  def get_groups
-    current_user.groups
   end
 end

@@ -1,4 +1,4 @@
-class GroupChannel < ApplicationCable::Channel
+class GroupsChannel < ApplicationCable::Channel
   def subscribed
     stream_for 'groups'
   end

@@ -10,6 +10,7 @@ class ApplicationController < ActionController::Base
     @current_user = User.find(id)
   rescue ActiveRecord::RecordNotFound
     format.json { render json: { error: "User not found" }, status: :not_found }
+    format.html { redirect_to login_form_session_path, notice: 'User not found' }
   rescue JWT::DecodeError => e
     respond_to do |format|
       format.json { render json: { error: e.message }, status: :unauthorized }
