@@ -15,9 +15,9 @@ class MessagesController < ApplicationController
     @message = Message.new(create_params)
     if @message.save
       if @receiver.class.name == "User"
-        UsersChannel.broadcast_to("users", ChatUserSerializer.new(get_chat_users))
+        # UsersChannel.broadcast_to("users", ChatUserSerializer.new(get_chat_users))
       elsif @receiver.class.name == "Group"
-        GroupsChannel.broadcast_to("groups", GroupSerializer.new(get_groups))
+        # GroupsChannel.broadcast_to("groups", GroupSerializer.new(get_groups))
       else
         raise UnknownType
       end
