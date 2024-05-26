@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   mount ActionCable.server => '/cable'
 
-  root "manages#index"
+  root "homes#index"
 
   resource :session, only: %i[] do
     collection do

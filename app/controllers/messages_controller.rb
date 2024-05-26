@@ -15,9 +15,9 @@ class MessagesController < ApplicationController
     @message = Message.new(create_params)
     if @message.save
       if @receiver.class.name == "User"
-        # UsersChannel.broadcast_to("users", ChatUserSerializer.new(get_chat_users))
+        UsersChannel.broadcast_to("users", ChatUserSerializer.new(get_chat_users))
       elsif @receiver.class.name == "Group"
-        # GroupsChannel.broadcast_to("groups", GroupSerializer.new(get_groups))
+        GroupsChannel.broadcast_to("groups", GroupSerializer.new(get_groups))
       else
         raise UnknownType
       end
@@ -35,14 +35,14 @@ class MessagesController < ApplicationController
   def find_receiver
     is_params_present, output = is_params_present?([:receivable_type, :receivable_id])
     unless is_params_present
-      return render json: { errors: 0 }, status: :bad_request
+      return render json: { errors: output }, status: :bad_request
     end
-    class_name = params[:receivable_type]
-    class_name.constantize  # not check model in below line
-    unless class_name.present? && ActiveRecord::Base.descendants.map(&:name).include?(class_name)
+    receivable_type = params[:receivable_type]
+    receivable_type.constantize  # not check model in below line
+    unless receivable_type.present? && ActiveRecord::Base.descendants.map(&:name).include?(receivable_type)
       raise TypeError
     end
-    @receiver = class_name.constantize.find(params[:receivable_id])
+    @receiver = receivable_type.constantize.find(params[:receivable_id])
   rescue TypeError
     render json: { errors: ['No such receiver type present'] }
   rescue ActiveRecord::RecordNotFound

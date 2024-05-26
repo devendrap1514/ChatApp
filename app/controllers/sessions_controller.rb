@@ -13,17 +13,20 @@ class SessionsController < ApplicationController
     user = User.find_by(email: params[:email])
     if user && user.authenticate(params[:password])
       token = JsonWebToken.encode(id: user.id)
-      session[:token] = token
       return respond_to do |format|
         format.json { render json: UserSerializer.new(user, meta: { token: token }) }
-        format.html { redirect_to root_path }
+        format.html {
+          session[:token] = token
+          redirect_to root_path
+        }
       end
     else
-      return render json: { errors: ['Invalid username or passord'] }, status: :bad_request
+      return render json: { errors: ['Invalid email or passord'] }, status: :bad_request
     end
   end
 
   def logout
     session.delete(:token)
+    redirect_to root_path
   end
 end
