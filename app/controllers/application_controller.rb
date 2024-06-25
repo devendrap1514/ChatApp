@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  include ParamChecker
   protect_from_forgery with: :null_session
 
   before_action :authorize_request
@@ -20,20 +21,5 @@ class ApplicationController < ActionController::Base
 
   def current_user
     @current_user || nil
-  end
-
-  def is_params_present?(keys)
-    errors = []
-    keys.each do |key|
-      unless params[key].present?
-        errors << "#{key} should be present"
-      end
-    end
-    return [false, errors] unless errors.empty?
-    return [true, errors]
-  end
-
-  def layout
-
   end
 end

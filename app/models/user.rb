@@ -5,7 +5,7 @@ class User < ApplicationRecord
   has_many :send_messages, class_name: "Message", foreign_key: "sender_id", dependent: :destroy
   has_many :received_messages, class_name: "Message", as: :receivable, dependent: :destroy
   has_many :created_groups, class_name: 'Group', foreign_key: 'creator_id', dependent: :destroy
-  has_many :memberships
+  has_many :memberships, dependent: :destroy
   has_many :groups, through: :memberships
 
   # Callbacks

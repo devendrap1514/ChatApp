@@ -1,3 +1,0 @@
-<% @chat_users.each do |user| %>
-  <%= link_to "#{user.name}", "#{messages_path}?receivable_type=#{user.class.name}&receivable_id=#{user.id}" %></div>
-<% end %>

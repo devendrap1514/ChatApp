@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Start Sidekiq
+bundle exec sidekiq &
+
+# Start Rails server
+bin/rails server &
+
+# Wait for all background processes to finish
+wait

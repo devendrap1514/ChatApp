@@ -1,28 +1,23 @@
 class MessagesController < ApplicationController
   include MessageConcern
   include GroupConcern
-  include UserConcern
 
-  before_action :find_receiver, only: %i[index create]
-  before_action :find_group, only: %i[index]
+  require_params_for(:receivable_type, :receivable_id)
+  require_params_for(:create, :receivable_type, :receivable_id)
 
-  def index
-    @messages = get_messages
-    render json: MessageSerializer.new(@messages)
-  end
+  before_action :find_receiver, only: %i[create]
 
   def create
     @message = Message.new(create_params)
     if @message.save
-      if @receiver.class.name == "User"
-        UsersChannel.broadcast_to("users", ChatUserSerializer.new(get_chat_users))
-      elsif @receiver.class.name == "Group"
-        GroupsChannel.broadcast_to("groups", GroupSerializer.new(get_groups))
+      message_ser = MessageSerializer.new(@message)
+      if @receiver.class.name == "Group"
+        render json: message_ser
       else
-        raise UnknownType
+        render json: { errors: ['Not Implement'] }, status: :bad_request
       end
-      render json: MessageSerializer.new(@message)
     else
+      flash.now[:notice] = @message.errors.full_messages
       render json: { errors: @message.errors.full_messages }, status: :unprocessable_entity
     end
   end
@@ -33,10 +28,6 @@ class MessagesController < ApplicationController
   end
 
   def find_receiver
-    is_params_present, output = is_params_present?([:receivable_type, :receivable_id])
-    unless is_params_present
-      return render json: { errors: output }, status: :bad_request
-    end
     receivable_type = params[:receivable_type]
     receivable_type.constantize  # not check model in below line
     unless receivable_type.present? && ActiveRecord::Base.descendants.map(&:name).include?(receivable_type)
@@ -47,11 +38,5 @@ class MessagesController < ApplicationController
     render json: { errors: ['No such receiver type present'] }
   rescue ActiveRecord::RecordNotFound
     render json: { errors: ['Receiver not found'] }
-  end
-
-  def find_group
-    @group = @current_user.groups.find(params[:receivable_id]) if @receiver.class.name == "Group"
-  rescue ActiveRecord::RecordNotFound
-    render json: { errors: ['Group not found'] }, status: :not_found
   end
 end

@@ -1,7 +1,10 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
   mount ActionCable.server => '/cable'
+  mount Sidekiq::Web => '/sidekiq'
 
-  root "homes#index"
+  root "groups#index"
 
   resource :session, only: %i[] do
     collection do
@@ -13,13 +16,8 @@ Rails.application.routes.draw do
 
   resources :users, only: %i[create destroy]
   resources :messages, only: %i[index create]
-  resources :groups, only: %i[index create] do
+  resources :groups, only: %i[index show create] do
     resources :members, only: %i[index create]
   end
-  resources :homes, only: %i[index]
-  resources :chat_users, only: %i[index] do
-    collection do
-      get :search
-    end
-  end
+  resources :posts, only: %i[index create]
 end

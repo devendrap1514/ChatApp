@@ -1,15 +1,9 @@
 class SessionsController < ApplicationController
   before_action :authorize_request, only: %i[]
 
-  def new
-
-  end
+  require_params_for(:login, :email, :password)
 
   def login
-    is_params_present, output = is_params_present?([:email, :password])
-    unless is_params_present
-      return render json: { errors: output }, status: :bad_request
-    end
     user = User.find_by(email: params[:email])
     if user && user.authenticate(params[:password])
       token = JsonWebToken.encode(id: user.id)

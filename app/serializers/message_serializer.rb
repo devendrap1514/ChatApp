@@ -6,7 +6,6 @@ class MessageSerializer < ApplicationSerializer
   end
 
   attribute :receiver do |object|
-    GroupSerializer.new(object.receivable) if object.receivable.class.name == 'Group'
-    UserSerializer.new(object.receivable) if object.receivable.class.name == 'User'
+    object.receivable.name
   end
 end

@@ -75,5 +75,14 @@ end
 gem 'fast_jsonapi'
 gem 'dotenv-rails'
 gem 'jwt'
-gem 'bcrypt', '~> 3.1.7'
+gem 'bcrypt'
 gem 'pagy'
+gem 'bullet', group: 'development'
+gem "rubycritic", require: false
+gem 'sidekiq'
+gem 'jsbundling-rails'
+gem "aws-sdk-s3", require: false
+gem "mini_magick"
+gem 'streamio-ffmpeg'
+gem "countries"
+gem "country_select"

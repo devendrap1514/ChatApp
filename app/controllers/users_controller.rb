@@ -1,3 +1,4 @@
+# This class is responsible to manage user CRUD operation
 class UsersController < ApplicationController
   before_action :authorize_request, only: %i[destroy]
 
@@ -18,6 +19,6 @@ class UsersController < ApplicationController
   private
 
   def create_params
-    params.permit(:name, :email, :password, :password_confirmation)
+    params.permit(:name, :email, :password, :password_confirmation, :image)
   end
 end
