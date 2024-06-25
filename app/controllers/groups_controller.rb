@@ -1,4 +1,4 @@
-class GroupsController < ApplicationController
+class GroupsController < AppController
   include GroupConcern
 
   before_action :find_group, only: %i[show]

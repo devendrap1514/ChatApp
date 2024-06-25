@@ -1,4 +1,4 @@
-class MembersController < ApplicationController
+class MembersController < AppController
   before_action :find_group, only: %i[index create]
 
   def index

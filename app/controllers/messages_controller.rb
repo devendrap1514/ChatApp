@@ -1,4 +1,4 @@
-class MessagesController < ApplicationController
+class MessagesController < AppController
   include MessageConcern
   include GroupConcern
 

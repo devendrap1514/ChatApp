@@ -1,5 +1,5 @@
 # This class is responsible to manage user CRUD operation
-class UsersController < ApplicationController
+class UsersController < AppController
   before_action :authorize_request, only: %i[destroy]
 
   def create

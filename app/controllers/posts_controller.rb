@@ -1,5 +1,5 @@
 # This class is responsible to manage post CRUD operation
-class PostsController < ApplicationController
+class PostsController < AppController
   before_action :authorize_request, only: %i[]
 
   def index

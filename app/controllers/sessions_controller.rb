@@ -1,4 +1,4 @@
-class SessionsController < ApplicationController
+class SessionsController < AppController
   before_action :authorize_request, only: %i[]
 
   require_params_for(:login, :email, :password)

@@ -71,4 +71,6 @@ Rails.application.configure do
 
   config.hosts << "close-guiding-mackerel.ngrok-free.app"
   config.hosts << "close-guiding-mackerel.ngrok-free.app"
+
+  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
 end
