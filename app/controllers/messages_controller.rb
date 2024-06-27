@@ -1,11 +1,10 @@
 class MessagesController < AppController
-  include MessageConcern
-  include GroupConcern
+  before_action :find_receiver, only: %i[index create]
 
-  require_params_for(:receivable_type, :receivable_id)
-  require_params_for(:create, :receivable_type, :receivable_id)
-
-  before_action :find_receiver, only: %i[create]
+  def index
+    @pagy = @messages = pagy(@receiver.messages)
+    render json: MessageSerializer.new(@messages)
+  end
 
   def create
     @message = Message.new(create_params)

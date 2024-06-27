@@ -1,6 +1,6 @@
 # This class is responsible to manage user CRUD operation
 class UsersController < AppController
-  before_action :authorize_request, only: %i[destroy]
+  before_action :validate_token!, only: %i[destroy]
 
   def create
     user = User.new(create_params)

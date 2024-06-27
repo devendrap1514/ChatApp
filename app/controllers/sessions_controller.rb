@@ -1,7 +1,5 @@
 class SessionsController < AppController
-  before_action :authorize_request, only: %i[]
-
-  require_params_for(:login, :email, :password)
+  before_action :validate_token!, only: %i[]
 
   def login
     user = User.find_by(email: params[:email])
@@ -17,10 +15,5 @@ class SessionsController < AppController
     else
       return render json: { errors: ['Invalid email or passord'] }, status: :bad_request
     end
-  end
-
-  def logout
-    session.delete(:token)
-    redirect_to root_path
   end
 end

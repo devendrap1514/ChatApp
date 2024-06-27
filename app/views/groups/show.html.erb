@@ -1,6 +1,0 @@
-<!-- app/views/groups/show.html.erb -->
-<h1><%= @group.name %></h1>
-<div id="message-list" data-group-id="<%= @group.id %>">
-  <%= render @messages.includes([:sender]) %>
-</div>
-<%= render partial: 'messages/form' %>

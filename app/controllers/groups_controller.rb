@@ -1,22 +1,13 @@
 class GroupsController < AppController
-  include GroupConcern
-
   before_action :find_group, only: %i[show]
 
   def index
-    @groups = get_groups
-    respond_to do |format|
-      format.json { render json: GroupSerializer.new(@groups) }
-      format.html {  }
-    end
+    @pagy, @groups = pagy(@current_user.groups)
+    render_ok_response(GroupSerializer.new(@groups), pagination: @pagy)
   end
 
   def show
-    @messages = @group.messages
-    respond_to do |format|
-      format.json {  }
-      format.html {  }
-    end
+    render json: GroupSerializer.new(@group)
   end
 
   def create

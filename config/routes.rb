@@ -6,13 +6,9 @@ Rails.application.routes.draw do
   mount ActionCable.server => '/cable'
   mount Sidekiq::Web => '/sidekiq'
 
-  root "groups#index"
-
   resource :session, only: %i[] do
     collection do
-      get :login_form
       post :login
-      delete :logout
     end
   end
 

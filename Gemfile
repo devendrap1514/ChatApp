@@ -88,3 +88,4 @@ gem "countries"
 gem "country_select"
 gem 'activeadmin'
 gem 'devise'
+gem 'request_params_validation'
