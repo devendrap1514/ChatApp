@@ -2,7 +2,7 @@ class MessagesController < AppController
   before_action :find_receiver, only: %i[index create]
 
   def index
-    @pagy = @messages = pagy(@receiver.messages)
+    @pagy, @messages = pagy(@receiver.messages.order(created_at: :asc))
     render json: MessageSerializer.new(@messages)
   end
 

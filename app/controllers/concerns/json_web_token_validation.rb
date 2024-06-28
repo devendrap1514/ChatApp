@@ -11,6 +11,7 @@ module JsonWebTokenValidation
     @id = decode_hash[:id]
     @current_user = User.find(@id)
     # set_timezone
+
   rescue ActiveRecord::RecordNotFound
     render_not_found_response(["User not found"])
   rescue JWT::ExpiredSignature
